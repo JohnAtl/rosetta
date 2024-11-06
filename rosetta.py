@@ -17,7 +17,7 @@ from pathlib import Path
 
 import toml
 
-from src.hypnos.type_defs import Dialect, FilePath, SystemType
+from ml_shared.type_defs import Dialect, FilePath, SystemType
 
 
 class NoTranslationError(Exception):
@@ -44,7 +44,7 @@ class Rosetta:
 
     _instance = None
 
-    PACKAGE_NAME = "hypnos"
+    PACKAGE_NAME = "rosetta"
 
     _dictionary = {}
     _translated = {}

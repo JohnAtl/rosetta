@@ -1,40 +1,64 @@
-# rosetta
-Translate from source to canonical words, then back to original source words.
+Here are some suggestions to improve and standardize your `README.md` file for clarity, structure, and consistency:
 
-This module uses a dictionary (dictionaries.toml), where it looks up a canonical word from one or more source words. These translations are further grouped into dialects, such as events or edf channel names, so that a source word may be translated to text that is human readable, such as a description, as well as to words specific to the system, such as channel names. The module further ensures that when a canonical word is translated back to a source word, the correct source word is used.
+---
 
-For example:
-```
+# `rosetta`
+
+The `rosetta` module facilitates translations between source terms and canonical words and allows translations to revert to their original source terms. 
+
+## Overview
+
+The module uses a dictionary file (`dictionaries.toml`) to map one or more source words to a canonical term, organized into specific **dialects** such as event names or channel names for EDF files. This allows source terms to be translated into human-readable text or system-specific terms (e.g., channel names). When a canonical word is translated back to a source word, the original source word is correctly restored.
+
+### Example Usage
+
+```python
 canonical = rosetta.get_canonical("Queixo", Dialect.DESCRIPTIONS)
-# canonical is CHIN
+# canonical is 'CHIN'
+
 source = rosetta.get_source("CHIN", Dialect.DESCRIPTIONS)
-# source is Queixo
+# source is 'Queixo'
 ```
+
 If Spanish source words are added to the dictionary:
-```
+
+```python
 canonical = rosetta.get_canonical("Mentón", Dialect.DESCRIPTIONS)
-# canonical is CHIN
+# canonical is 'CHIN'
+
 source = rosetta.get_source("CHIN", Dialect.DESCRIPTIONS)
-# source is Mentón
+# source is 'Mentón'
 ```
-Thus, the proper source word is returned for the translated canonical word.
 
-Dialects currently available:
-EVENTS - Event names, such as SNORE, AROUSAL, etc.
-DESCRIPTIONS - Descriptions for humans to read
-CHANNEL_NAMES_EDF - EDF channel names
-CHANNEL_NAMES_XML - XML/RML channel names
+The correct source word is returned for the translated canonical term.
 
-Translations are also system-specific, so that NEUROVIRTUAL channel names do not clash with RESPIRONICS channel names, etc. The system is chosen when rosetta is initialized.
+### Available Dialects
 
-```
+- **EVENTS** - Event names such as `SNORE`, `AROUSAL`, etc.
+- **DESCRIPTIONS** - Human-readable descriptions
+- **CHANNEL_NAMES_EDF** - Channel names specific to EDF files
+- **CHANNEL_NAMES_XML** - Channel names specific to XML/RML files
+
+### System-Specific Translations
+
+Translations are system-specific to avoid conflicts, e.g., NEUROVIRTUAL channel names differ from RESPIRONICS channel names. The system type is specified during initialization.
+
+### Case Handling
+
+Lookups in the dictionaries are case-insensitive (e.g., `QUEIXO` and `Queixo` both translate to `CHIN`). However, when source words are returned, case is preserved.
+
+## Quick Start
+
+```python
 from ml_shared.type_defs import SystemType
 from rosetta.rosetta import rosetta, Dialect
 
+# Load a dictionary for a specific system type
 rosetta.load_from_file(SystemType.NEUROVIRTUAL)
-...
-canonical = rosetta.get_canonical("QUEIXO", Dialect.DESCRIPTIONS)
-...
-```
 
-Case is preserved, and lookups in the dictionaries are case insensitive, so QUEIXO and Queixo will both return CHIN. Source words are returned with case preserved, so in the previous example, QUEIXO or Queixo will be returned.
+# Translate a source term to a canonical term
+canonical = rosetta.get_canonical("QUEIXO", Dialect.DESCRIPTIONS)
+
+# Translate a canonical term back to its original source term
+source = rosetta.get_source("CHIN", Dialect.DESCRIPTIONS)
+```

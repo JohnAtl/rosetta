@@ -233,7 +233,7 @@
         O2 = ["O2"]
         LOC = ["LOC"]
         ROC = ["ROC"]
-        CHIN = ["QUEIX"]
+        CHIN = ["QUEIX", "MENTÓN"]
         ECG = ["CARDI"]
         FLOW = ["TERMI"]
         PRES = ["PRESS"]

@@ -11,19 +11,36 @@ Classes:
              different dialects for a specified system type.
 """
 
+from enum import Enum, auto
 from importlib import resources
 from os.path import exists
 from pathlib import Path
 
 import toml
 
-from ml_shared.type_defs import Dialect, FilePath, SystemType
+from ml_shared.type_defs import FilePath, SystemType
 
 
 class NoTranslationError(Exception):
     """
     Exception thrown when there is a translation error.
     """
+
+
+class Dialect(Enum):
+    """
+    Enum of different dialects related to words used in
+    the different systems.
+    """
+
+    EVENTS = auto()
+    DESCRIPTIONS = auto()
+    CHANNEL_NAMES_EDF = auto()
+    CHANNEL_NAMES_XML = auto()
+
+    @property
+    def dialect(self) -> str:
+        return super().name
 
 
 class Rosetta:
@@ -103,7 +120,8 @@ class Rosetta:
 
         dialect_dict = cls._dictionary[dialect.dialect]
         for canonical, sources in dialect_dict.items():
-            if source in sources:
+            sources_upr = [source.upper() for source in sources]
+            if source.upper() in sources_upr:
                 if dialect.dialect not in cls._translated:
                     cls._translated[dialect.dialect] = {}
                 cls._translated[dialect.dialect][canonical] = source
